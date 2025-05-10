@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
+//[B5] A×B
+//https://www.acmicpc.net/problem/10998
 public class Main {
 	//static field
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
