@@ -15,9 +15,10 @@ public class Main {
 	//main
 	public static void main(String[] args) throws IOException {
 		//init
+//		String answer = "";
+		StringBuilder answer = new StringBuilder();
 		int a;
 		int b;
-		int answer;
 		
 		//input
 		st = new StringTokenizer(br.readLine(), " ");
@@ -25,9 +26,19 @@ public class Main {
 		b = Integer.parseInt(st.nextToken());
 		
 		//solution
-		answer = a * b;
+//		answer += ( a + b + "\n" );
+//		answer += ( a - b + "\n" );
+//		answer += ( a * b + "\n" );
+//		answer += ( a / b + "\n" );
+//		answer += ( a % b );
+		answer.append(a+b).append("\n")
+			  .append(a-b).append("\n")
+			  .append(a*b).append("\n")
+			  .append(a/b).append("\n")
+			  .append(a%b);
 		
 		//output
 		System.out.println(answer);
+		br.close();
 	}
 }
