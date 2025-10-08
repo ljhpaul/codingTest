@@ -1,5 +1,7 @@
 package programmers.java.ch08_Hash;
 
+import java.util.HashMap;
+
 // 할인 행사
 // https://school.programmers.co.kr/learn/courses/30/lessons/131127
 public class P20 {
@@ -18,8 +20,45 @@ public class P20 {
 
     public int solution(String[] want, int[] number, String[] discount) {
         int answer = 0;
+        HashMap<String, Integer> tenDaysDiscounts = new HashMap<>();
+        int start = 0;
+        int end = 9;
 
-        
+        // 처음 10일간의 할인일정 초기화
+        for (int i = 0; i < 10; i++) {
+            if(tenDaysDiscounts.containsKey(discount[i])) {
+                tenDaysDiscounts.put(discount[i], tenDaysDiscounts.get(discount[i]) + 1);
+            } else {
+                tenDaysDiscounts.put(discount[i], 1);
+            }
+        }
+
+        // 회원등록 총 일수 계산
+        for (int i = 0; i <= discount.length - 10; i++) {
+            boolean register = true;
+            for (int j = 0; j < want.length; j++) {
+                String item = want[j];
+                int itemCnt = number[j];
+                if(!tenDaysDiscounts.containsKey(item) ||
+                    tenDaysDiscounts.get(item) < itemCnt) {
+                    register = false;
+                    break;
+                }
+            }
+
+            if(register) {
+                answer++;
+            }
+
+            if(i == discount.length - 10) break;
+
+            tenDaysDiscounts.put(discount[i], tenDaysDiscounts.get(discount[i]) - 1);
+            if(tenDaysDiscounts.containsKey(discount[i + 10])) {
+                tenDaysDiscounts.put(discount[i + 10], tenDaysDiscounts.get(discount[i + 10]) + 1);
+            } else {
+                tenDaysDiscounts.put(discount[i + 10], 1);
+            }
+        }
 
         return answer;
     }
