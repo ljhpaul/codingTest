@@ -30,9 +30,12 @@ public class Main {
 		BFS();
 		answer = dist[k];
 
+
 		// output
 		System.out.println(answer);
 	}
+
+
 
 	private static void BFS() {
 		ArrayDeque<Integer> q = new ArrayDeque<>();
