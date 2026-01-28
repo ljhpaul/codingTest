@@ -1,4 +1,4 @@
-package baekjoon.roadmap.week01.boj14500.boj1697;
+package baekjoon.roadmap.week01.boj14500;
 
 import java.io.*;
 import java.util.*;
@@ -15,14 +15,14 @@ public class Main {
 		st = new StringTokenizer(br.readLine());
 		int n = Integer.parseInt(st.nextToken());
 		int m = Integer.parseInt(st.nextToken());
-		int[][]
+//		int[][]
 
 		// get answer
 		// '-'
-		for(int i=0; i<)
+//		for(int i=0; i<)
 
 		// output
-		System.out.println(answer);
+//		System.out.println(answer);
 	}
 
 }
