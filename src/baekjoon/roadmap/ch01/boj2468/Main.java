@@ -1,4 +1,4 @@
-package baekjoon.roadmap.week01.boj2468;
+package baekjoon.roadmap.ch01.boj2468;
 
 import java.io.*;
 import java.util.*;

@@ -1,7 +1,12 @@
-package baekjoon.roadmap.week01.boj7576;
+package baekjoon.roadmap.ch01.boj1012;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayDeque;
+import java.util.Queue;
+import java.util.StringTokenizer;
 
 public class Main {
     // static field
