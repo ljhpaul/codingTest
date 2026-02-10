@@ -3,11 +3,7 @@ package swea.trialSW.p5648;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
-import java.util.StringTokenizer;
+import java.util.*;
 
 class Solution {
     // static field
@@ -15,27 +11,26 @@ class Solution {
     static StringBuilder sb = new StringBuilder();
     static StringTokenizer st;
 
-    static Atom[][] grid;
-    static Queue<int[]> q;
-    static List<int[]> list;
-    static int answer;
+    static List<Atom> atoms;
+    static int totalEnergy;
 
-    static int[] dummy = {-1, -1, -1, -1};
-    static int[] dr = {0, 0, -1, 1};
-    static int[] dc = {-1, 1, 0, 0};
+    static final int MAX = 4000;
+    static final int MIN = 0;
+    static int[] dx = {0, 0, -1, 1};
+    static int[] dy = {1, -1, 0, 0};
 
     // Atom
     static class Atom {
+        int x;
+        int y;
         int d;
         int k;
-        boolean isMoved;
-        boolean isCrushed;
 
-        Atom(int d, int k) {
+        Atom(int x, int y, int d, int k) {
+            this.x = x;
+            this.y = y;
             this.d = d;
             this.k = k;
-            this.isMoved = false;
-            this.isCrushed = false;
         }
     }
 
@@ -46,28 +41,24 @@ class Solution {
         for(int tc = 1; tc <= T; tc++) {
             // init
             int N = Integer.parseInt(br.readLine());
-            grid = new Atom[2001][2001];
-            q = new ArrayDeque<>();
-            q.offer(dummy);  // cycle point enqueue
-            list = new ArrayList<>();
-            answer = 0;
+            atoms = new ArrayList<>();
+            totalEnergy = 0;
 
             // input
             for(int i = 0; i < N; i++) {
                 st = new StringTokenizer(br.readLine());
-                int r = Integer.parseInt(st.nextToken());
-                int c = Integer.parseInt(st.nextToken());
+                int x = Integer.parseInt(st.nextToken());
+                int y = Integer.parseInt(st.nextToken());
                 int d = Integer.parseInt(st.nextToken());
                 int k = Integer.parseInt(st.nextToken());
-                q.offer(new int[]{r + 1000, c + 1000, d, k});
-                grid[r + 1000][c + 1000] = new Atom(d, k);
+                atoms.add(new Atom(2*x + 2000, 2*y + 2000, d, k));
             }
             
             // solve
             solve();
 
             // answer
-            sb.append("#").append(tc).append(" ").append(answer).append("\n");
+            sb.append("#").append(tc).append(" ").append(totalEnergy).append("\n");
         }
 
         // output
@@ -77,67 +68,53 @@ class Solution {
 
     // solve
     private static void solve() {
-        while(q.size() > 1) {
-            // new cycle start -> remove shadow(2)
-            if(q.peek() == dummy) {
-                q.poll();
-                removeCrush();
-                q.offer(dummy);
-                continue;
+        while(!atoms.isEmpty()) {
+            Map<Long, int[]> moved = new HashMap<>();
+            Set<Long> collided = new HashSet<>();
+            List<Atom> next = new ArrayList<>();
+
+            // 이동
+            for (Atom a : atoms) {
+                a.x += dx[a.d];
+                a.y += dy[a.d];
+                if(isOut(a.x, a.y)) continue;
+                long k = key(a.x, a.y);
+                if (moved.containsKey(k)) {
+                    // value : int[] {cnt, sum}
+                    moved.get(k)[0]++;
+                    moved.get(k)[1] += a.k;
+                } else {
+                    moved.put(k, new int[]{1, a.k});
+                }
             }
 
-            // get pos
-            int[] cur = q.poll();
-            int r = cur[0];
-            int c = cur[1];
-            int d = cur[2];
-            int k = cur[3];
-
-            // get remain crush
-            if(grid[r][c]) {
-                answer += k;
-                continue;
+            // 충돌 처리
+            for (Long k : moved.keySet()) {
+                if (moved.get(k)[0] >= 2) {
+                    totalEnergy += moved.get(k)[1];
+                    collided.add(k);
+                }
             }
 
-            // remove shadow
-            shadow[r][c] = 0;
-
-            // move atom
-            int nr = r + dr[d];
-            int nc = c + dc[d];
-            if(nr < 0 || nr >= 2001 || nc < 0 || nc >= 2001) continue;
-            if(grid[nr][nc] > 0) {
-                // crush
-                answer += k;
-                grid[nr][nc] = 2;
-                list.add(new int[]{r, c});
-                continue;
-            } else {
-                grid[nr][nc] = 1;
+            // 생존자 갱신
+            for (Atom a : atoms) {
+                if(isOut(a.x, a.y)) continue;
+                long k = key(a.x, a.y);
+                if (collided.contains(k)) continue;
+                next.add(a);
             }
-
-            // end move
-            q.offer(new int[]{nr, nc, d, k});
+            atoms = next;
         }
     }
 
-    private static void removeCrush() {
-        for(int[] pos : list) {
-            int r = pos[0];
-            int c = pos[1];
-            grid[r][c] = 0;
+    private static boolean isOut(int nx, int ny) {
+        if(nx < MIN || nx > MAX || ny < MIN || ny > MAX) {
+            return true;
         }
-        list = new ArrayList<>();
+        return false;
+    }
+
+    private static long key(int x, int y) {
+        return ((long)x<<32) | (y&0xffffffffL);
     }
 }
-/*
-# 상태
-- 결정:
-- 미결정:
-# 선택지
--
-# 제약
--
-# 종료 조건
--
- */
