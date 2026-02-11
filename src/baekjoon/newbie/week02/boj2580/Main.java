@@ -1,4 +1,4 @@
-package baekjoon.newbie.week01.boj2580;
+package baekjoon.newbie.week02.boj2580;
 
 import java.io.*;
 import java.util.*;
