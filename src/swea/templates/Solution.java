@@ -1,4 +1,4 @@
-package swea.d2.p14510;
+package swea.templates;
 
 import java.io.*;
 import java.util.*;
@@ -9,18 +9,19 @@ class Solution {
     static StringBuilder sb = new StringBuilder();
     static StringTokenizer st;
 
-
-
     // main
     public static void main(String[] args) throws IOException {
         // test case
         int T = Integer.parseInt(br.readLine());
         for(int tc = 1; tc <= T; tc++) {
             // init
+            int answer = 0;
 
-            // input=
+            // input
 
+            
             // solve
+
 
             // answer
             sb.append("#").append(tc).append(" ").append(answer).append("\n");
@@ -30,5 +31,4 @@ class Solution {
         System.out.println(sb);
         br.close();
     }
-
 }
