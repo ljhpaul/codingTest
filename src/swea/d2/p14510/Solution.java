@@ -17,8 +17,9 @@ class Solution {
         int T = Integer.parseInt(br.readLine());
         for(int tc = 1; tc <= T; tc++) {
             // init
+            int answer = 0;
 
-            // input=
+            // input
 
             // solve
 
