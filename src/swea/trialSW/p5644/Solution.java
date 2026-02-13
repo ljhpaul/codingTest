@@ -17,8 +17,6 @@ class Solution {
     static boolean[][][] grid;
     static int[] move1;
     static int[] move2;
-    static boolean[] isChargeable1;
-    static boolean[] isChargeable2;
 
     // main
     public static void main(String[] args) throws IOException {
@@ -35,8 +33,6 @@ class Solution {
             C = new int[A];
             P = new int[A];
             grid = new boolean[10][10][A];
-            isChargeable1 = new boolean[A];
-            isChargeable2 = new boolean[A];
 
             // input
             st = new StringTokenizer(br.readLine());
@@ -56,10 +52,10 @@ class Solution {
                 int range = Integer.parseInt(st.nextToken());
                 int charge = Integer.parseInt(st.nextToken());
 
-                C[i] = charge;
+                P[i] = charge;
 
-                grid[r - 1][c - 1][i] = true;
-                spread(i, r, c, range);
+                spread(i, r - 1, c - 1, range);
+                System.out.println("끝");
             }
             
             // move
@@ -75,27 +71,27 @@ class Solution {
     }
 
     private static void spread(int bcNum, int r, int c, int range) {
+        System.out.print("[" + r + ", " + c + "] -> ");
+        grid[r][c][bcNum] = true;
+
         if(range == 0) {
             return;
         }
-
-        grid[r][c][bcNum] = true;
 
         for(int d=1; d<5; d++) {
             int nr = r + dr[d];
             int nc = c + dc[d];
             if(nr < 0 || nr >= 10 || nc < 0 || nc >= 10) continue;
-            if(grid[r][c][bcNum]) continue;
+            if(grid[nr][nc][bcNum]) continue;
             spread(bcNum, nr, nc, range - 1);
         }
     }
 
     private static void move() {
-        int r1 = 1;
-        int c1 = 1;
-        int r2 = 10;
-        int c2 = 10;
-
+        int r1 = 0;
+        int c1 = 0;
+        int r2 = 9;
+        int c2 = 9;
         charge(r1, c1, r2, c2);
 
         for(int i=0; i<M; i++) {
@@ -103,21 +99,25 @@ class Solution {
             c1 += dc[move1[i]];
             r2 += dr[move2[i]];
             c2 += dc[move2[i]];
-
             charge(r1, c1, r2, c2);
         }
     }
 
     private static void charge(int r1, int c1, int r2, int c2) {
+        int maxCharge = 0;
         for(int i=0; i<A; i++) {
             for(int j=0; j<A; j++) {
                 if(grid[r1][c1][i] && grid[r2][c2][j]) {
                     if(i == j) {
-                        answer = Math.max(answer, )
+                        maxCharge = Math.max(answer, P[i]);
+                    } else {
+                        maxCharge = Math.max(answer, P[i] + P[j]);
                     }
                 }
             }
         }
+        System.out.println(maxCharge);
+        answer += maxCharge;
     }
 
 }
