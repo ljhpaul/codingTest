@@ -9,7 +9,7 @@ class Solution {
     static StringBuilder sb = new StringBuilder();
     static StringTokenizer st;
     
-    static int answer, maxProfit, N, M;
+    static int answer, N, M;
     static List<int[]> home;
 
     // main
@@ -19,7 +19,6 @@ class Solution {
         for(int tc = 1; tc <= T; tc++) {
             // init
             answer = 0;
-            maxProfit = 0;
             st = new StringTokenizer(br.readLine());
             N = Integer.parseInt(st.nextToken());
             M = Integer.parseInt(st.nextToken());
@@ -70,7 +69,6 @@ class Solution {
             		}
             		int profit = cnt * M - cost;
             		if(cnt > answer && profit >= 0) {
-            			maxProfit = profit;
             			answer = cnt;
             		}
             	}
