@@ -1,4 +1,4 @@
-package swea.d5.p1267;
+package swea.d6.p1267;
 
 import java.io.*;
 import java.util.*;
