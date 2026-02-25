@@ -7,178 +7,104 @@ public class Main {
 	// static field
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	static StringTokenizer st;
-
-	static int answer, sharkSize, remainGrowth, sharkR, sharkC, N;
+	
+	static int cntSum, sSize, exp, sr, sc, N;
 	static int[][] map;
-	static int[][] dist;
 
-	static int[] dr = { -1, 0, 1, 0 };
-	static int[] dc = { 0, -1, 0, 1 };
-
-	// Fish class
-	static class Fish implements Comparable<Fish> {
-		int r, c, size;
-
-		public Fish(int r, int c, int size) {
-			this.r = r;
-			this.c = c;
-			this.size = size;
-		}
-
-		@Override
-		public int compareTo(Fish o) {
-			return this.size - o.size;
-		}
-	}
+	static int[] dr = { -1, 0, 0, 1 };
+	static int[] dc = { 0, -1, 1, 0 };
 
 	// main
 	public static void main(String[] args) throws IOException {
 		// init
-		answer = 0;
-		sharkSize = 2;
-		remainGrowth = 2;
+		cntSum = 0;
+		sSize = 2;
+		exp = sSize;
 		N = Integer.parseInt(br.readLine());
 		map = new int[N][N];
 
 		// input
-		for (int r = 0; r < N; r++) {
+		for(int r=0; r<N; r++) {
 			st = new StringTokenizer(br.readLine());
-			for (int c = 0; c < N; c++) {
+			for(int c=0; c<N; c++) {
 				int size = Integer.parseInt(st.nextToken());
-				if (size == 9) {
-					sharkR = r;
-					sharkC = c;
-				} else if (size > 0) {
+				// 상어
+				if(size == 9) {
+					sr = r;
+					sc = c;
+				}
+				// 물고기
+				else {
 					map[r][c] = size;
 				}
 			}
 		}
 
 		// solve
-		System.out.println(Arrays.deepToString(map));
-		while (eatable()) {
-			dist = new int[N][N];
-			for (int[] line : dist)
-				Arrays.fill(line, Integer.MAX_VALUE);
-//			bfs();
-			dist[sharkR][sharkC] = 0;
-			dfs(sharkR, sharkC);
-			System.out.println(Arrays.deepToString(map));
-		}
-
+		while(true) if(!bfs()) break;
+		
 		// output
-		System.out.println(answer);
+		System.out.println(cntSum);
 		br.close();
 	}
-
-	// eatable
-	private static boolean eatable() {
-		int cnt = 0;
-		int minSize = Integer.MAX_VALUE;
-		for (int r = 0; r < N; r++) {
-			for (int c = 0; c < N; c++) {
-				int size = map[r][c];
-				if (size > 0) {
-					cnt++;
-					minSize = Math.min(minSize, size);
-				}
-			}
-		}
-		if (cnt == 0)
-			return false;
-		if (minSize >= sharkSize)
-			return false;
-		return true;
-	}
-
+	
 	// BFS
-	private static void bfs() {
+	private static boolean bfs() {
 		// init
+		PriorityQueue<int[]> pq = new PriorityQueue<>((a, b)->{
+			if(a[0] != b[0]) return a[0] - b[0];
+			if(a[1] != b[1]) return a[1] - b[1];
+			return a[2] - b[2];
+		});
 		int[][] dist = new int[N][N];
-		for (int[] line : dist)
-			Arrays.fill(line, Integer.MAX_VALUE);
+		for(int[] line : dist) Arrays.fill(line, -1);
 		Queue<int[]> q = new ArrayDeque<>();
-
-		q.offer(new int[] { sharkR, sharkC });
-		dist[sharkR][sharkC] = 0;
-
+		
+		// first pos
+		q.offer(new int[] {sr, sc});
+		dist[sr][sc] = 0;
+		
 		// loop
-		outer: while (!q.isEmpty()) {
+		while(!q.isEmpty()) {
 			int[] curr = q.poll();
 			int r = curr[0];
 			int c = curr[1];
-
+			
 			// delta 4
-			for (int d = 0; d < 4; d++) {
+			for(int d=0; d<4; d++) {
 				int nr = r + dr[d];
 				int nc = c + dc[d];
-				if (nr < 0 || nr >= N || nc < 0 || nc >= N)
-					continue;
-				if (dist[nr][nc] != Integer.MAX_VALUE)
-					continue; // 방문 여부 확인
-
-				int fishSize = map[nr][nc];
-				// 물고기인 경우
-				if (fishSize > 0) {
-					// 상어 vs 물고기 사이즈 비교
-					if (sharkSize > fishSize) {
-						answer += dist[r][c] + 1;
-						if (--remainGrowth == 0) {
-							sharkSize++;
-							remainGrowth = sharkSize;
-						}
-						map[nr][nc] = 0; // 상어보다 작으면 먹기
-						sharkR = nr;
-						sharkC = nc;
-						break outer;
-					} else if (sharkSize < fishSize) {
-						continue; // 상어보다 크면 이동 불가
-					}
+				
+				if(nr < 0 || nr >= N || nc < 0 || nc >= N) continue;
+				if(dist[nr][nc] != -1) continue;
+				
+				int fSize = map[nr][nc];
+				// 물고기
+				if(fSize > 0) {
+					if(sSize < fSize) continue;
+					if(sSize > fSize) pq.offer(new int[] {dist[r][c] + 1, nr, nc});
 				}
-
-				q.offer(new int[] { nr, nc });
+				
+				// 이동
+				q.offer(new int[] {nr, nc});
 				dist[nr][nc] = dist[r][c] + 1;
 			}
 		}
-
-		// renew time
-		if (dist[sharkR][sharkC] != Integer.MAX_VALUE) {
-			answer += dist[sharkR][sharkC];
-		}
-	}
-
-	// DFS
-	private static boolean dfs(int r, int c) {
-		int fishSize = map[r][c];
-		// 물고기인 경우
-		if (fishSize > 0) {
-			// 상어 vs 물고기 사이즈 비교
-			if (sharkSize > fishSize) {
-				answer += dist[r][c] + 1;
-				if (--remainGrowth == 0) {
-					sharkSize++;
-					remainGrowth = sharkSize;
-				}
-				map[r][c] = 0; // 상어보다 작으면 먹기
-				sharkR = r;
-				sharkC = c;
-				return true;
-			} else if (sharkSize < fishSize) {
-				return false;
+		
+		// renew cntSum
+		if(!pq.isEmpty()) {
+			int[] fish = pq.poll();
+			cntSum += fish[0];
+			sr = fish[1];
+			sc = fish[2];
+			// 먹기
+			map[sr][sc] = 0;
+			// 성장
+			if(--exp == 0) {
+				sSize++;
+				exp = sSize;
 			}
-		}
-
-		// delta 4
-		for (int d = 0; d < 4; d++) {
-			int nr = r + dr[d];
-			int nc = c + dc[d];
-			if (nr < 0 || nr >= N || nc < 0 || nc >= N) continue;
-			if (dist[nr][nc] != Integer.MAX_VALUE) continue; // 방문 여부 확인
-
-			int tmp = dist[nr][nc];
-			dist[nr][nc] = dist[r][c] + 1;
-			if(dfs(nr, nc)) return true;
-			dist[nr][nc] = tmp;
+			return true;
 		}
 		
 		return false;
