@@ -23,7 +23,7 @@ public class Main {
 		
 		
 		// output
-		System.out.println(answer);
+//		System.out.println(answer);
 		br.close();
 	}
 	
