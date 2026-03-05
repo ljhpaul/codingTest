@@ -1,9 +1,9 @@
-package baekjoon.newbie.week05.boj2138;
+package test;
 
 import java.io.*;
 import java.util.*;
 
-public class Main {
+public class BOJ_2138_이정헌 {
 	// static field
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	static StringTokenizer st;
