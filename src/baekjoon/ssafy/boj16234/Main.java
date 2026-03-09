@@ -39,7 +39,7 @@ public class Main {
 			int move = 0;
 			for(int r=0; r<N; r++) {
 				for(int c=0; c<N; c++) {
-					if(bfs(r, c)) move++;
+					if(!visited[r][c] && bfs(r, c)) move++;
 				}
 			}
 			if(move > 0) answer++;
