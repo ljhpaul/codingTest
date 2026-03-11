@@ -8,22 +8,80 @@ public class Main {
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	static StringTokenizer st;
 	
+	static int N;
+	static int[] pr, sz;
+	static List<Edge> edges;
+	static List<Planet> planets;
 	
+	// Edge
+	static class Edge implements Comparable<Edge> {
+		int u, v, w;
+
+		public Edge(int u, int v, int w) {
+			this.u = u;
+			this.v = v;
+			this.w = w;
+		}
+
+		@Override
+		public int compareTo(Edge o) {
+			return Integer.compare(this.w, o.w);
+		}
+	}
+	
+	// Planet
+	static class Planet {
+		int id, x, y, z;
+
+		public Planet(int id, int x, int y, int z) {
+			this.id = id;
+			this.x = x;
+			this.y = y;
+			this.z = z;
+		}
+	}
 	
 	// main
 	public static void main(String[] args) throws IOException {
 		// init
 		long answer = 0;
-		
-		// input
-		
+		N = Integer.parseInt(br.readLine());
+		pr = new int[N];
+		sz = new int[N];
+		edges = new ArrayList<>();
+		planets = new ArrayList<>();
+		for(int i=0; i<N; i++) {
+			// 행성 정보 입력
+			st = new StringTokenizer(br.readLine());
+			int x = Integer.parseInt(st.nextToken());
+			int y = Integer.parseInt(st.nextToken());
+			int z = Integer.parseInt(st.nextToken());
+			planets.add(new Planet(i, x, y, z));
+			
+			// 유니온 파인드 배열 초기화
+			pr[i] = i;
+			sz[i] = i;
+		}
 
 		// solve
-		
+		setEdges();
+		kruskalMST();
 
 		// output
 		System.out.println(answer);
 		br.close();
+	}
+
+	// set edges
+	private static void setEdges() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	// kruskal MST
+	private static void kruskalMST() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	
