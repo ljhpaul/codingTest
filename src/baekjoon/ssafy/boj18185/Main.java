@@ -34,16 +34,22 @@ public class Main {
 		long result = 0;
 		
 		for(int i=0; i<N; i++) {
-			if(cnts[i] <= cnts[i+1]) {
-				if(cnts[i+1] > cnts[i+2]) {
-					int min = Math.min(cnts[i], cnts[i+2]);
-					result += 5 * min;
-					cnts[i] -= min;
-					cnts[i+1] -= min;
-				}
-			} else {
-				
+			// 2개 사기
+			if(cnts[i+1] > cnts[i+2]) {
+				int tmp = Math.min(cnts[i], cnts[i+1] - cnts[i+2]);
+				result += 5 * tmp;
+				cnts[i] -= tmp;
+				cnts[i+1] -= tmp;
 			}
+			// 3개 사기
+			int tmp = Math.min(cnts[i], Math.min(cnts[i+1], cnts[i+2]));
+			result += 7 * tmp;
+			cnts[i] -= tmp;
+			cnts[i+1] -= tmp;
+			cnts[i+2] -= tmp;
+			// 1개 사기
+			result += 3 * cnts[i];
+			cnts[i] = 0;
 		}
 		
 		return result;
