@@ -44,7 +44,6 @@ public class Main {
 	// main
 	public static void main(String[] args) throws IOException {
 		// init
-		long answer = 0;
 		N = Integer.parseInt(br.readLine());
 		pr = new int[N];
 		sz = new int[N];
@@ -60,12 +59,12 @@ public class Main {
 			
 			// 유니온 파인드 배열 초기화
 			pr[i] = i;
-			sz[i] = i;
+			sz[i] = 1;
 		}
 
 		// solve
 		setEdges();
-		kruskalMST();
+		long answer = kruskalMST();
 
 		// output
 		System.out.println(answer);
@@ -74,21 +73,77 @@ public class Main {
 
 	// set edges
 	private static void setEdges() {
-		// TODO Auto-generated method stub
+		// x 방향
+		Collections.sort(planets, (a, b) -> Integer.compare(a.x, b.x));
+		for(int i=0; i<planets.size()-1; i++) {
+			Planet p1 = planets.get(i);
+			Planet p2 = planets.get(i+1);
+			edges.add(new Edge(p1.id, p2.id, p2.x-p1.x));
+		}
 		
+		// y 방향
+		Collections.sort(planets, (a, b) -> Integer.compare(a.y, b.y));
+		for(int i=0; i<planets.size()-1; i++) {
+			Planet p1 = planets.get(i);
+			Planet p2 = planets.get(i+1);
+			edges.add(new Edge(p1.id, p2.id, p2.y-p1.y));
+		}
+		
+		// z 방향
+		Collections.sort(planets, (a, b) -> Integer.compare(a.z, b.z));
+		for(int i=0; i<planets.size()-1; i++) {
+			Planet p1 = planets.get(i);
+			Planet p2 = planets.get(i+1);
+			edges.add(new Edge(p1.id, p2.id, p2.z-p1.z));
+		}
+		
+		// 간선 정렬
+		Collections.sort(edges);
 	}
 
 	// kruskal MST
-	private static void kruskalMST() {
-		// TODO Auto-generated method stub
+	private static long kruskalMST() {
+		// init
+		int eCnt = 0;
+		long wSum = 0;
 		
+		// 비용 작은 간선부터 연결 시도
+		for(Edge e : edges) {
+			// 사이클 검사
+			if(find(e.u) != find(e.v)) {
+				union(e.u, e.v);
+				eCnt++;
+				wSum += e.w; 
+			}
+			
+			// MST 완성
+			if(eCnt == N-1) break;
+		}
+		
+		return wSum;
 	}
 	
+	// find
+	private static int find(int x) {
+		if(pr[x] != x) {
+			pr[x] = find(pr[x]);
+		}
+		return pr[x];
+	}
 	
+	// union
+	private static void union(int a, int b) {
+		int A = find(a);
+		int B = find(b);
+		
+		if(A == B) return;
+		
+		if(sz[A] >= sz[B]) {
+			pr[B] = A;
+			sz[A] += sz[B];
+		} else {
+			pr[A] = B;
+			sz[B] += sz[A];
+		}
+	}
 }
-/*
-# Kruskal MST
-1. 간선 배열(리스트), 유니온 파인드 배열(pr, sz) 초기화
-2. 그래프(간선) 가중치 오름차순 정렬
-3. 가중치 낮은 연산부터 연결 시도(find로 사이클 확인)
-*/
