@@ -1,4 +1,4 @@
-package baekjoon.ssafy.boj12100;
+package baekjoon.solvedac.class05.boj12100;
 
 import java.io.*;
 import java.util.*;
