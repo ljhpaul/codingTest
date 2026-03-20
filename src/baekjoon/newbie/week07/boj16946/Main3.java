@@ -3,7 +3,7 @@ package baekjoon.newbie.week07.boj16946;
 import java.io.*;
 import java.util.*;
 
-public class Main {
+public class Main3 {
 	// static field
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	static StringTokenizer st;

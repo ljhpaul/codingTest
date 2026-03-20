@@ -3,15 +3,15 @@ package baekjoon.newbie.week07.boj16946;
 import java.io.*;
 import java.util.*;
 
-public class Main {
+public class Main2 {
 	// static field
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	static StringTokenizer st;
 	
 	static StringBuilder sb;
-	static int N, M, id;
-	static int[][] map, moveable;
-	static Node[][] sizes;
+	static int N, M, globalId;
+	static int[][] map, groupId, moveable;
+	static List<Integer> groupSize;
 	static List<int[]> walls;
 	static boolean[][] visited;
 	
@@ -36,6 +36,10 @@ public class Main {
 		// solve
 		solve();
 		getAnswer();
+		
+		for(int[] line : groupId) {
+			System.out.println(Arrays.toString(line));
+		}
 
 		// output
 		System.out.println(sb);
@@ -50,11 +54,12 @@ public class Main {
 		N = Integer.parseInt(st.nextToken());
 		M = Integer.parseInt(st.nextToken());
 		map = new int[N][M];
+		groupId = new int[N][M];
+		groupSize = new ArrayList<>();
 		moveable = new int[N][M];
-		sizes = new Node[N][M];
 		walls = new ArrayList<>();
 		visited = new boolean[N][M];
-        id = 1;
+        globalId = 0;
 
 		// input
 		for(int r = 0; r < N; r++) {
@@ -71,11 +76,8 @@ public class Main {
 		// i) BFS로 sizes 영역 채우기
 		for(int r = 0; r < N; r++) {
 			for(int c = 0; c < M; c++) {
-				if(map[r][c] == 1) {
-					sizes[r][c] = new Node(0, 0);
-					continue;
-				}
-				if(sizes[r][c] != null) continue;
+				if(map[r][c] == 1) continue;
+				if(visited[r][c]) continue;
 				bfs(r, c);
 			}
 		}
@@ -95,12 +97,13 @@ public class Main {
 				// check valid area
 				if(nr < 0 || nr >= N || nc < 0 || nc >= M) continue;
 				
-				Node node = sizes[nr][nc];
-				if(checkedId.contains(node.id)) continue;
+				int id = groupId[nr][nc];
+				int size = groupSize.get(id);
+				if(checkedId.contains(id)) continue;
 				
 				// 인접 영역의 크기 반영
-				cnt += node.size;
-				checkedId.add(node.id);
+				cnt += size;
+				checkedId.add(id);
 			}
 			
 			// moveable에 cnt 반영
@@ -143,17 +146,14 @@ public class Main {
 				path.add(next);
 				q.offer(next);
 				visited[nr][nc] = true;
+				groupId[nr][nc] = globalId;
 				size++;
 			}
 		}
 		
 		// 해당 영역의 모든 경로에 size 확정
-		for(int[] pos : path) {
-			int r = pos[0];
-			int c = pos[1];
-			sizes[r][c] = new Node(id, size);
-		}
-		id++;
+		groupSize.add(size);
+		globalId++;
 	}
 
 	// get answer
