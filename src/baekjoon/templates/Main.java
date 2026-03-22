@@ -12,6 +12,9 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 		// init
 		int answer = 0;
+		
+		// input
+		
 
 		// solve
 

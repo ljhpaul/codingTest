@@ -12,7 +12,7 @@ public class Main {
 	// main
 	public static void main(String[] args) throws IOException {
 		// init
-		
+		int answer = 0;
 		
 		// input
 		
