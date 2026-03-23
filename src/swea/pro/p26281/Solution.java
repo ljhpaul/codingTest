@@ -8,73 +8,92 @@ class Solution {
 	private static BufferedReader br;
     private static UserSolution userSolution = new UserSolution();
 
-    private final static int MAX_N          = 100;
-    private final static int MAX_M          = 4;
-    private final static int CMD_INIT       = 100;
-    private final static int CMD_CHANGE     = 200;
-    private final static int CMD_CALCULATE  = 300;
+    private final static int MAXN = 20;
+    private final static int MAXM = 300;
     
+    private final static int CMD_ADD = 200;
+    private final static int CMD_RUN = 300;
+    
+    private static int mMap[][] = new int[MAXN][MAXN];
+    private static int mHP;
+    private static int mRetTs[] = new int[MAXM];
+    private static int mRetHP[] = new int[MAXM];
+    
+    private static int N;
+
     private static boolean run() throws Exception {
-    	StringTokenizer st = new StringTokenizer(br.readLine(), " ");
-        int N, M, L, mRow, mCol, mDir, mLength, sRow, sCol, eRow, eCol;
-        String mGrade[][] = new String[MAX_N][MAX_N];
-
-        int Q = Integer.parseInt(st.nextToken());
+    	StringTokenizer stdin = new StringTokenizer(br.readLine(), " ");
+    	
     	boolean okay = false;
+    	int mRow, mCol, mInterval, N, M, Q;
 
-	    for (int q = 0; q < Q; ++q)
-	    {
-        	st = new StringTokenizer(br.readLine(), " ");
-	        int cmd = Integer.parseInt(st.nextToken());
+        N = Integer.parseInt(stdin.nextToken());
+        mMap = new int[N][N];
+        
+        for (int y = 0; y < N; y++)
+    	{
+    		stdin = new StringTokenizer(br.readLine(), " ");
+    		for (int x = 0; x < N; x++)
+    		{
+    			mMap[y][x] = Integer.parseInt(stdin.nextToken());
+    		}
+    	}
+    	userSolution.init(N, mMap);
 
-	        if (cmd == CMD_INIT)
-	        {
-	            N = Integer.parseInt(st.nextToken());
-	            M = Integer.parseInt(st.nextToken());
-                for(int i = 0; i < N; ++i) {
-        	        st = new StringTokenizer(br.readLine(), " ");
-                    for(int j = 0; j < N; ++j)
-                        mGrade[i][j] = st.nextToken();
-                }
-	            userSolution.init(N, M, mGrade);
-	            okay = true;
-	        }
-	        else if (cmd == CMD_CHANGE)
-	        {
-                mRow = Integer.parseInt(st.nextToken());
-                mCol = Integer.parseInt(st.nextToken());
-                mDir = Integer.parseInt(st.nextToken());
-                mLength = Integer.parseInt(st.nextToken());
-                String mChgGrade = st.nextToken();
-	            userSolution.change(mRow, mCol, mDir, mLength, mChgGrade);
-	        }
-	        else if (cmd == CMD_CALCULATE)
-	        {
-                L = Integer.parseInt(st.nextToken());
-                sRow = Integer.parseInt(st.nextToken());
-                sCol = Integer.parseInt(st.nextToken());
-                eRow = Integer.parseInt(st.nextToken());
-                eCol = Integer.parseInt(st.nextToken());
-                String ansGrade = st.nextToken();
-	            String ret = userSolution.calculate(L, sRow, sCol, eRow, eCol);
+    	okay = true;
+    	
+    	stdin = new StringTokenizer(br.readLine(), " ");
+    	Q = Integer.parseInt(stdin.nextToken());
 
-                if(ansGrade.compareTo(ret)!= 0) {
-                    okay = false;
-                }
-	        }
-	    }
-	    return okay;
+    	for (int q = 0; q < Q; ++q)
+    	{
+    		stdin = new StringTokenizer(br.readLine(), " ");
+    		int cmd = Integer.parseInt(stdin.nextToken());
+    		switch (cmd)
+    		{
+    		case CMD_ADD:
+    			mRow = Integer.parseInt(stdin.nextToken());
+    			mCol = Integer.parseInt(stdin.nextToken());
+    			mInterval = Integer.parseInt(stdin.nextToken());
+    			userSolution.addTower(mRow, mCol, mInterval);
+    			break;
+    		case CMD_RUN:
+    			M = Integer.parseInt(stdin.nextToken());
+    			mInterval = Integer.parseInt(stdin.nextToken());
+    			mHP = Integer.parseInt(stdin.nextToken());
+    			userSolution.runSimulation(M, mInterval, mHP, mRetTs, mRetHP);
+
+    			for (int i = 0; i < M; i++)
+    			{
+    				int x = Integer.parseInt(stdin.nextToken());
+    				if (mRetTs[i] != x)
+    					okay = false;
+    			}
+    			for (int i = 0; i < M; i++)
+    			{
+    				int x = Integer.parseInt(stdin.nextToken());;
+    				if (mRetHP[i] != x)
+    					okay = false;
+    			}
+    			break;
+    		default:
+    			okay = false;
+    			break;
+    		}
+    	}
+
+        return okay;
     }
 
     public static void main(String[] args) throws Exception {
         int T, MARK;
 
-//         System.setIn(new java.io.FileInputStream("./res/sample_input.txt"));
-        br = new BufferedReader(new InputStreamReader(System.in));        
-        StringTokenizer st = new StringTokenizer(br.readLine(), " ");
-        
-        T = Integer.parseInt(st.nextToken());
-        MARK = Integer.parseInt(st.nextToken());
+//        System.setIn(new java.io.FileInputStream("res/sample_input.txt"));
+        br = new BufferedReader(new InputStreamReader(System.in));
+
+        StringTokenizer stinit = new StringTokenizer(br.readLine(), " ");
+        T = Integer.parseInt(stinit.nextToken());
+        MARK = Integer.parseInt(stinit.nextToken());
 
         for (int tc = 1; tc <= T; tc++) {
             int score = run() ? MARK : 0;
