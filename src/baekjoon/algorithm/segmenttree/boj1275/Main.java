@@ -49,14 +49,15 @@ public class Main {
 	// build
 	private static long build(int node, int start, int end) {
 		// 리프 노드 도달시 값 대입
-		if(start == end) {
-			tree[node] = nums[start];
-		}
+		if(start == end) tree[node] = nums[start];
+		
 		// 좌우 분기
 		else {
 			int mid = (start + end) / 2;
-			tree[node] = build(node * 2, start, mid) + build(node * 2 + 1, mid + 1, end);
+			tree[node] = build(node * 2, start, mid) 
+					+ build(node * 2 + 1, mid + 1, end);
 		}
+		
 		// 현재 노드 반환
 		return tree[node];
 	}
