@@ -16,8 +16,8 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 		// init
 		N = Integer.parseInt(br.readLine());
-		height = new int[N];
-		area = new long[N];
+		height = new int[N + 1];
+		area = new long[N + 1];
 		
 		// input
 		for(int i = 0; i < N; i++) {
@@ -40,22 +40,24 @@ public class Main {
 		ArrayDeque<Integer> stack = new ArrayDeque<>();
 		
 		// loop
-		for(int i = 0; i < N; i++) {
+		for(int i = 0; i <= N; i++) {
 			// curr
 			int current = height[i];
 			
 			// pop
-			while(!stack.isEmpty() && true) {
-				
+			while(!stack.isEmpty() && height[stack.peek()] > current) {
+				int top = stack.pop();
+				area[top] = height[top] * (i - top);
 			}
-				
+			
 			// push
 			stack.push(i);
 		}
 		
 		// flush
 		while(!stack.isEmpty()) {
-			
+			int top = stack.pop();
+			area[top] = height[top];
 		}
 	}
 	
