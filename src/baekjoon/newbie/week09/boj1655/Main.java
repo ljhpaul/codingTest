@@ -7,17 +7,26 @@ public class Main {
 	// static field
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	static StringTokenizer st;
-
+	
 	// main
 	public static void main(String[] args) throws IOException {
 		// init
-		int answer = 0;
+		StringBuilder answer = new StringBuilder();
+		int N = Integer.parseInt(br.readLine());
+		PriorityQueue<Integer> pq = new PriorityQueue<>(Comparator.reverseOrder());
 		
-		// input
-		
-
 		// solve
-
+		for(int i = 0; i < N; i++) {
+			int size = (int) Math.ceil(i / 2);
+			int num = Integer.parseInt(br.readLine());
+			while(true) {
+				if(pq.size() == size || pq.peek() > num) break;
+//				System.out.println(pq);
+				pq.poll();
+			}
+			pq.offer(num);
+			System.out.println(pq);
+		}
 
 		// output
 		System.out.println(answer);
