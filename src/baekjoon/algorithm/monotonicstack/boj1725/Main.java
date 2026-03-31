@@ -26,6 +26,7 @@ public class Main {
 		
 		// solve
 		monotonicStack();
+		System.out.println(Arrays.toString(area));
 		long answer = getMax();
 		
 		// output
@@ -47,7 +48,8 @@ public class Main {
 			// pop
 			while(!stack.isEmpty() && height[stack.peek()] > current) {
 				int top = stack.pop();
-				area[top] = height[top] * (i - top);
+				int leftBound = stack.isEmpty() ? -1 : stack.peek();
+				area[top] = height[top] * (i - leftBound - 1);
 			}
 			
 			// push
@@ -55,9 +57,10 @@ public class Main {
 		}
 		
 		// flush
+		int idx = N;
 		while(!stack.isEmpty()) {
 			int top = stack.pop();
-			area[top] = height[top];
+			area[top] = height[top] * (N - top + 1);
 		}
 	}
 	

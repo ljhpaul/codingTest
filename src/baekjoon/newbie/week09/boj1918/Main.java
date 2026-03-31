@@ -11,17 +11,54 @@ public class Main {
 	// main
 	public static void main(String[] args) throws IOException {
 		// init
-		int answer = 0;
+		String infix = br.readLine();
 		
-		// input
-		
-
 		// solve
-
-
+		String answer = infixToPostfix(infix);
+		
 		// output
 		System.out.println(answer);
 		br.close();
+	}
+	
+	// infix -> postfix
+	private static String infixToPostfix(String infix) {
+		// init
+		StringBuilder postfix = new StringBuilder();
+		Stack<Character> stack = new Stack<>();
+		
+		// set priority
+		Map<Character, Integer> priority = new HashMap<>();
+		priority.put('(', 0);
+		priority.put('+', 1);
+		priority.put('-', 1);
+		priority.put('*', 2);
+		priority.put('/', 2);
+		
+		// loop
+		for(char c : infix.toCharArray()) {
+			if('A' <= c && c <= 'Z') {
+				postfix.append(c);
+			} else if(c == '(') {
+				stack.add(c);
+			} else if(c == ')') {
+				while(!stack.isEmpty() && stack.peek() != '(') {
+					postfix.append(stack.pop());
+				}
+				stack.pop();
+			} else {
+				while(!stack.isEmpty() && priority.get(stack.peek()) >= priority.get(c)) {
+					postfix.append(stack.pop());
+				}
+				stack.push(c);
+			}
+		}
+		while(!stack.isEmpty()) {
+			postfix.append(stack.pop());
+		}
+		
+		// return
+		return postfix.toString();
 	}
 
 }
