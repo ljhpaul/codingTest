@@ -19,8 +19,8 @@ public class Main {
 		for(int i = 0; i < N; i++) {
 			int size = (int) Math.ceil(i / 2);
 			int num = Integer.parseInt(br.readLine());
-			while(true) {
-				if(pq.size() == size || pq.peek() > num) break;
+			while(pq.peek() < num) {
+				if(pq.size() == size || ) break;
 //				System.out.println(pq);
 				pq.poll();
 			}
