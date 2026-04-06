@@ -9,7 +9,7 @@ class Solution {
     static StringBuilder sb = new StringBuilder();
     static StringTokenizer st;
     
-    static int answer;
+    static int minCost, daily, monthly_1, monthly_3, annually;
     static int[] plan, cost;
 
     // main
@@ -18,25 +18,26 @@ class Solution {
         int T = Integer.parseInt(br.readLine());
         for(int tc = 1; tc <= T; tc++) {
             // init
-        	plan = new int[12];		// 연간 이용 계획(1~12월)
-        	cost = new int[4];		// 일일, 1달, 3달, 연간
-        	
-        	//input
-        	st = new StringTokenizer(br.readLine());
-        	for(int i=0; i<4; i++) {
-        		cost[i] = Integer.parseInt(st.nextToken());
-        	}
-        	st = new StringTokenizer(br.readLine());
-        	for(int month=0; month<12; month++) {
-        		plan[month] = Integer.parseInt(st.nextToken());
-        	}
-        	
-        	// solve
-        	answer = cost[3];	// 합계를 연간권과 비교
-        	dfs(0, 0);
-        	
+        	minCost = Integer.MAX_VALUE;
+            st = new StringTokenizer(br.readLine());
+            daily = Integer.parseInt(st.nextToken());
+            monthly_1 = Integer.parseInt(st.nextToken());
+            monthly_3 = Integer.parseInt(st.nextToken());
+            annually = Integer.parseInt(st.nextToken());
+            plan = new int[13];
+            cost = new int[13];
+
+            // input
+            st = new StringTokenizer(br.readLine());
+            for(int month = 1; month <= 12; month++) {
+            	plan[month] = Integer.parseInt(st.nextToken());
+            }
+            
+            // solve
+            solve();
+
             // answer
-            sb.append("#").append(tc).append(" ").append(answer).append("\n");
+            sb.append("#").append(tc).append(" ").append(minCost).append("\n");
         }
 
         // output
@@ -44,25 +45,19 @@ class Solution {
         br.close();
     }
     
-    // dfs
-    private static void dfs(int month, int sum) {
-    	if(sum >= answer) return;	// 합계가 최솟값보다 클 경우 가지치기
-    	if(month >= 12) {
-    		// 합계와 연간권 비교
-    		answer = Math.min(answer, sum);
-    		return;
+    // solve
+    private static void solve() {
+    	// loop
+    	for(int month = 1; month <= 12; month++) {
+    		int dailyCost = daily * plan[month];
+    		cost[month] = cost[month - 1] + Math.min(dailyCost, monthly_1);
+    		
+    		if(month >= 3) {
+    			cost[month] = Math.min(cost[month], cost[month - 3] + monthly_3);
+    		}
     	}
     	
-    	// 해당 달에 이용 계획 없으면 다음 달로 넘어가기
-    	if(plan[month] == 0) {
-    		dfs(month + 1, sum);
-    		return;
-    	}
-    	
-    	// 일일권 vs 1달권
-    	int monthly = Math.min(cost[0]*plan[month], cost[1]);
-    	dfs(month + 1, sum + monthly);
-    	// 3달권
-    	dfs(month + 3, sum + cost[2]);
+    	// annually
+    	minCost = Math.min(annually, cost[12]);
     }
 }
