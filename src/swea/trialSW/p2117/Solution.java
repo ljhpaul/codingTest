@@ -82,6 +82,9 @@ class Solution {
 					
 					// 손해를 보지 않음 -> 최대 서비스 제공 수 갱신
 					if(profit >= 0) maxCnt = Math.max(maxCnt, cnt);
+					
+					// 조기 종료
+					if(maxCnt == homes.size()) return;
 				}
 			}
 		}
