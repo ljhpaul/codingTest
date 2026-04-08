@@ -1,4 +1,4 @@
-package baekjoon.algorithm.lis.binarysearch.boj12738;
+package baekjoon.algorithm.lis.binarysearch.boj4198;
 
 import java.io.*;
 import java.util.*;
@@ -21,9 +21,8 @@ public class Main {
 		lis = new ArrayList<>();
 		
 		// input
-		st = new StringTokenizer(br.readLine());
 		for(int i = 0; i < N; i++) {
-			arr[i] = Integer.parseInt(st.nextToken());
+			arr[i] = Integer.parseInt(br.readLine());
 		}
 
 		// solve
@@ -38,25 +37,26 @@ public class Main {
 	private static void solve() {
 		// 모든 요소 순회
 		for(int num : arr) {
-			// 좌우 포인터 선언
+			// 좌우 포인터
 			int left = 0;
 			int right = lis.size();
 			
-			// 이분탐색으로 삽입할 위치 찾기
+			// 이분 탐색으로 삽입 위치 선정
 			while(left < right) {
 				int mid = (left + right) / 2;
 				
-				// lower bound
+				// lower bound (엄격)
 				if(lis.get(mid) < num) left = mid + 1;
 				else right = mid;
 			}
 			
-			// 해당 위치에 삽입 (lis 크기보다 클 경우 add)
-			if(left >= lis.size()) lis.add(num);
+			// 해당 위치에 삽입 (lis 크기보다 크면 add)
+			if(left == lis.size()) lis.add(num);
 			else lis.set(left, num);
 		}
 		
-		// LIS 길이 : lis의 길이
-		answer = lis.size();
+		// LIS 길이 : lis의 크기
+		answer = N - lis.size();
 	}
+
 }

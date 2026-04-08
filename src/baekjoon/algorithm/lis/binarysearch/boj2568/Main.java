@@ -1,4 +1,4 @@
-package baekjoon.algorithm.lis.binarysearch.boj14003;
+package baekjoon.algorithm.lis.binarysearch.boj2568;
 
 import java.io.*;
 import java.util.*;
@@ -10,25 +10,43 @@ public class Main {
 	
 	static StringBuilder answer;
 	static int N;
+	static Pair[] pairs;
 	static int[] arr, pos;
 	static List<Integer> lis;
+	static boolean[] isLis;
+	
+	// Pair
+	static class Pair {
+		int a, b;
+		
+		public Pair(int a, int b) {
+			this.a = a;
+			this.b = b;
+		}
+	}
 
 	// main
 	public static void main(String[] args) throws IOException {
 		// init
 		answer = new StringBuilder();
 		N = Integer.parseInt(br.readLine());
+		pairs = new Pair[N];
 		arr = new int[N];
-		pos = new int[N];	// 각 요소가 들어간 LIS 위치
+		pos = new int[N];
 		lis = new ArrayList<>();
+		isLis = new boolean[N];
 		
 		// input
-		st = new StringTokenizer(br.readLine());
 		for(int i = 0; i < N; i++) {
-			arr[i] = Integer.parseInt(st.nextToken());
+			st = new StringTokenizer(br.readLine());
+			int a = Integer.parseInt(st.nextToken());
+			int b = Integer.parseInt(st.nextToken());
+			pairs[i] = new Pair(a, b);
 		}
 
 		// solve
+		Arrays.sort(pairs, (o1, o2) -> Integer.compare(o1.a, o2.a));
+		for(int i = 0; i < N; i++) arr[i] = pairs[i].b;
 		solve();
 
 		// output
@@ -44,11 +62,11 @@ public class Main {
 			int left = 0;
 			int right = lis.size();
 			
-			// 이분탐색으로 삽입할 위치 찾기
+			// 이분탐색으로 삽입 위치 선정
 			while(left < right) {
 				int mid = (left + right) / 2;
 				
-				// lower bound
+				// lower bound(엄격)
 				if(lis.get(mid) < arr[i]) left = mid + 1;
 				else right = mid;
 			}
@@ -61,18 +79,19 @@ public class Main {
 			pos[i] = left;
 		}
 		
-		// LIS 길이 : lis의 길이
-		answer.append(lis.size()).append("\n");
-		
-		// 경로 역추적
-		Stack<Integer> stack = new Stack<>();
+		// lis 경로 추적
 		int target = lis.size() - 1;
 		for(int i = N - 1; i >= 0; i--) {
 			if(pos[i] == target) {
-				stack.push(arr[i]);
+				isLis[i] = true;
 				target--;
 			}
 		}
-		while(!stack.isEmpty()) answer.append(stack.pop()).append(" ");
+		
+		// 전깃줄 출력
+		answer.append(N - lis.size()).append("\n");
+		for(int i = 0; i < N; i++) {
+			if(!isLis[i]) answer.append(pairs[i].a).append("\n");
+		}
 	}
 }
