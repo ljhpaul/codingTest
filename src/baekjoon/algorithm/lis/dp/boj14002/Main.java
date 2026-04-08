@@ -1,4 +1,4 @@
-package baekjoon.algorithm.lis.boj14002;
+package baekjoon.algorithm.lis.dp.boj14002;
 
 import java.io.*;
 import java.util.*;
