@@ -3,15 +3,14 @@ package swea.d6.p1263;
 import java.io.*;
 import java.util.*;
 
-class Solution {
+class Solution_BFS {
     // static field
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     static StringBuilder sb = new StringBuilder();
     static StringTokenizer st;
     
     static int answer, N;
-    static int[] cc;
-    static int[][] dist;
+    static ArrayList<Integer>[] graph;
     
     static final int INF = 1_000_000_000;
 
@@ -21,24 +20,24 @@ class Solution {
         int T = Integer.parseInt(br.readLine());
         for(int tc = 1; tc <= T; tc++) {
             // init
+        	answer = INF;
             st = new StringTokenizer(br.readLine());
             N = Integer.parseInt(st.nextToken());
-            cc = new int[N];
-            dist = new int[N][N];
+            graph = new ArrayList[N];
 
             // input
             for(int r = 0; r < N; r++) {
+            	graph[r] = new ArrayList<>();
             	for(int c = 0; c < N; c++) {
             		int tmp = Integer.parseInt(st.nextToken());
-            		if(r == c) dist[r][c] = 0;
-            		else if(tmp > 0) dist[r][c] = tmp;
-            		else dist[r][c] = INF;
+            		if(tmp > 0) graph[r].add(c);
             	}
             }
             
             // solve
-            floydWarshall();
-            answer = getMinCC();
+            for(int start = 0; start < N; start++) {
+            	answer = Math.min(getCC(start), answer);
+            }
 
             // answer
             sb.append("#").append(tc).append(" ").append(answer).append("\n");
@@ -49,26 +48,40 @@ class Solution {
         br.close();
     }
 
-	// Floyd-warshall
-	private static void floydWarshall() {
-		for(int k = 0; k < N; k++) {
-            for(int i = 0; i < N; i++) {
-            	for(int j = 0; j < N; j++) {
-            		dist[i][j] = Math.min(dist[i][j], dist[i][k] + dist[k][j]);
-            	}
-            }
-		}
-	}
-
-	// get min connected component
-    private static int getMinCC() {
-    	int minCC = INF;
-		for(int r = 0; r < N; r++) {
-			for(int c = 0; c < N; c++) {
-				cc[r] += dist[r][c];
+	// BFS * N
+	private static int getCC(int start) {
+		// init
+		int cc = 0;
+		Queue<Integer> q = new ArrayDeque<>();
+		boolean[] visited = new boolean[N];
+		int[] dist = new int[N];
+		
+		// start
+		q.add(start);
+		visited[start] = true;
+		dist[start] = 0;
+		
+		// loop
+		while(!q.isEmpty()) {
+			// curr
+			int curr = q.poll();
+			
+			// next
+			for(int next : graph[curr]) {
+				if(!visited[next]) {
+					visited[next] = true;
+					dist[next] = dist[curr] + 1;
+					q.add(next);
+				}
 			}
-			minCC = Math.min(minCC, cc[r]);
 		}
-		return minCC;
+		
+		// calc cc
+		for(int i = 0; i < N; i++) {
+			cc += dist[i];
+		}
+		
+		// return
+		return cc;
 	}
 }
