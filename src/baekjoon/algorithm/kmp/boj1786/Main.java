@@ -1,37 +1,31 @@
-package swea.d4.p4038;
+package baekjoon.algorithm.kmp.boj1786;
 
 import java.io.*;
 import java.util.*;
 
-class Solution {
-    // static field
-    static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    static StringBuilder sb = new StringBuilder();
-    static StringTokenizer st;
+public class Main {
+	// static field
+	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	static StringTokenizer st;
 
-    // main
-    public static void main(String[] args) throws IOException {
-        // test case
-        int T = Integer.parseInt(br.readLine());
-        for(int tc = 1; tc <= T; tc++) {
-            // init
-            String text = br.readLine();
-            String pattern = br.readLine();
-            
-            // solve
-            List<Integer> matches = kmpSearch(text, pattern);
-            int answer = matches.size();
+	// main
+	public static void main(String[] args) throws IOException {
+		// input
+		StringBuilder answer = new StringBuilder();
+		String text = br.readLine();
+		String pattern = br.readLine();
 
-            // answer
-            sb.append("#").append(tc).append(" ").append(answer).append("\n");
-        }
+		// solve
+		List<Integer> matches = kmpSearch(text, pattern);
+		answer.append(matches.size()).append("\n");
+		for(int idx : matches) answer.append(idx + 1).append(" ");
 
-        // output
-        System.out.println(sb);
-        br.close();
-    }
-
-    // build pi array
+		// output
+		System.out.println(answer);
+		br.close();
+	}
+	
+	// build pi arr
 	private static int[] buildPi(String pattern) {
 		// init
 		int m = pattern.length();
@@ -51,10 +45,10 @@ class Solution {
 			}
 		}
 		
-		// return pi
+		// return pi array
 		return pi;
 	}
-
+	
 	// KMP search
 	private static List<Integer> kmpSearch(String text, String pattern) {
 		// init
@@ -64,7 +58,7 @@ class Solution {
 		int[] pi = buildPi(pattern);
 		
 		// 각 배열 당 포인터 관리 (j 검사 및 후퇴, i 무조건 전진)
-		int j = 0;	// 패턴 포인터
+		int j = 0;
 		for(int i = 0; i < n; i++) {
 			// 불일치 -> j 후퇴(while)
 			while(j > 0 && text.charAt(i) != pattern.charAt(j)) {
@@ -76,7 +70,7 @@ class Solution {
 				j++;
 			}
 			
-			// 패턴 전체 일치 -> 인덱스 저장, 다음 매칭위해 j 후퇴
+			// 전체 일치 -> 인덱스 저장, 다음 매칭 위해 j 후퇴
 			if(j == m) {
 				result.add(i - m + 1);
 				j = pi[j - 1];
@@ -86,11 +80,5 @@ class Solution {
 		// return match idx
 		return result;
 	}
+
 }
-/**
-2
-ababa
-aba
-abracadabra
-ab
-*/
