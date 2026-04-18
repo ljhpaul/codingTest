@@ -3,7 +3,7 @@ package baekjoon.newbie.week10.boj15683;
 import java.io.*;
 import java.util.*;
 
-public class Main {
+public class Main2 {
 	// static field
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	static StringTokenizer st;
@@ -11,7 +11,7 @@ public class Main {
 	static int answer, N, M;
 	static int[][] room;
 	static List<int[]> cctv;
-	static List<int[]> list;
+	static List<Node> list;
 	
 	static int[] dr = {-1, 1, 0, 0};  // 상하좌우(0123)
 	static int[] dc = {0, 0, -1, 1};
@@ -23,6 +23,17 @@ public class Main {
 			{{0, 2, 3}, {0, 1, 3}, {1, 2, 3}, {0, 1, 2}},	// ┴, ├, ┬, ┤
 			{{0, 1, 2, 3}}	// ┼
 	};
+	
+	// Node
+	static class Node {
+		int[] pos;
+		int[] dirs;
+		
+		public Node(int[] pos, int[] dirs) {
+			this.pos = pos;
+			this.dirs = dirs;
+		}
+	}
 
 	// main
 	public static void main(String[] args) throws IOException {
@@ -71,7 +82,7 @@ public class Main {
 		int c = curr[1];
 		int type = room[r][c];
 		for(int[] dirs : watchDir[type]) {
-			list.add(dirs);
+			list.add(new Node(curr, dirs));
 			setDirection(idx + 1);
 			list.remove(list.size() - 1);
 		}
@@ -91,11 +102,11 @@ public class Main {
 	// set watch
 	private static void setWatch(int[][] copy) {
 		// loop
-		for(int i = 0; i < list.size(); i++) {
-			int r = cctv.get(i)[0];
-			int c = cctv.get(i)[1];
+		for(Node node : list) {
+			int r = node.pos[0];
+			int c = node.pos[1];
 			
-			for(int dir : list.get(i)) {
+			for(int dir : node.dirs) {
 				int nr = r;
 				int nc = c;
 				
